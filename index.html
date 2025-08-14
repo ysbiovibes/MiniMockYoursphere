@@ -340,7 +340,7 @@ function collectAllAnswers() {
 
 // ===== ส่งข้อมูลไป Google Apps Script (<<< ใส่ URL ของคุณเอง) =====
 async function sendResultToSheet(data) {
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxM2BnUIAPLIaPRHYGGUsXqP4vO54bqpomwhRasBhOrT4ozvxCp3D5d5xXw7IpOSf9hTA/exec'; // <<< ต้องเป็น /exec และ deploy ให้ Anyone
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbyIeWpY7gnVzb48l7ySYU2hG9oMnj6nQX6qWt3iKAZso4obkWLQ_6-pvYBaY0lmGo_1Nw/exec'; // <<< ต้องเป็น /exec และ deploy ให้ Anyone
   await fetch(GAS_URL, {
     method: 'POST',
     mode: 'no-cors', // ส่งได้ แม้อ่าน response ไม่ได้
@@ -451,3 +451,4 @@ resetBtn.addEventListener('click',()=>{
 
 </body>
 </html>
+
