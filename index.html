@@ -266,6 +266,11 @@
 </form>
 
 <script>
+// กัน form แอบ submit เอง
+document.getElementById('quizForm').addEventListener('submit', e => {
+  e.preventDefault(); e.stopPropagation();
+});
+
 // ===== เฉลยตามที่กำหนด =====
 const answers = {
   q1:'5', q2:'3', q3:'5', q4:'5', q5:'3', q6:'4', q7:'2', q8:'5',
@@ -274,63 +279,23 @@ const answers = {
   q15_1:'yes', q15_2:'no', q15_3:'no'
 };
 
-// ===== เฉลยละเอียด (ตัดตอนสำคัญ อิงที่คุณให้มา) =====
+// ===== เฉลยละเอียด (ย่อ) =====
 const explanations = {
-  q1: [
-    'เฉลย 5 ผิดข้อ 3 และ 4',
-    '• ข้อ 3: สิงโต trophic level 5 แต่เป็นผู้บริโภคลำดับที่ 4',
-    '• ข้อ 4: กฎ 10% ยังใช้ได้ เพียงแต่อธิบายเป็นสายใยไม่ได้ง่ายเหมือนห่วงโซ่'
-  ].join('\n'),
-  q2: [
-    'เฉลย 3: นิยาม BOD = O₂ ที่จุลินทรีย์ใช้ย่อยสารอินทรีย์',
-    'BOD สูง → น้ำเน่าเสียมาก, BOD ต่ำ → คุณภาพดีกว่า'
-  ].join('\n'),
-  q3: [
-    'แปลงคีย์: A→Platyhelminthes, B→Nematoda, C→Chordata, D→Echinodermata, E→Arthropoda, F→Annelida, G→Mollusca',
-    'ข้อควรระวัง: ทาก/หอยทาก/ปลิงทะเล=Mollusca; ปลิงน้ำจืด=Annelida; เพรียงหิน=Arthropoda เป็นต้น'
-  ].join('\n'),
-  q4: [
-    'เฉลย 5 (ค,ง ถูก):',
-    '• ค: ขั้วมากกว่าละลายน้ำดีกว่า',
-    '• ง: competitive inhibitor แย่ง substrate → เพิ่ม [substrate] ช่วยได้'
-  ].join('\n'),
-  q5: [
-    'เฉลย 3 (ก,ง ผิด):',
-    '• ก: ไตรกลีเซอไรด์ 1 โมเลกุล → น้ำ 3 โมเลกุลจากการควบแน่น',
-    '• ง: DNA/RNA ต่างกันที่น้ำตาลกับชนิดเบส ตำแหน่ง 5’ ฟอสเฟตเหมือนกัน'
-  ].join('\n'),
-  q6: [
-    'เฉลย 4: A isotonic (คงรูป), B hypertonic (เหี่ยว);',
-    'isotonic NaCl = 0.9%; หยดน้ำจืดลง A → เต่ง (พืชไม่แตก)'
-  ].join('\n'),
-  q7: [
-    'เฉลย 2: โปรตีนโผล่ใน filtrate บวก Na+ สูง ชี้ปัญหา glomerulus/การดูดกลับ'
-  ].join('\n'),
-  q8: [
-    'เฉลย 5: Thyroid→Calcitonin (ลด Ca²⁺), Parathyroid→PTH (เพิ่ม Ca²⁺)'
-  ].join('\n'),
-  q9: [
-    'เฉลย 1: Progesterone หลังตกไข่ทำให้มดลูกหนาตัวรอฝังตัว'
-  ].join('\n'),
-  q10: [
-    'เฉลย “ข้อที่ไม่ถูกต้อง” = 5: กรณีที่เห็นคือ reasoning มากกว่า trial & error'
-  ].join('\n'),
-  q11: [
-    'เฉลย 2: ก และ ค ถูก (ก=phloem, ค=fiber รอบนอก ผนังหนา มี lignin)'
-  ].join('\n'),
-  q12: [
-    'เฉลย 2: (ก) active loading sucrose → น้ำ osmosis เข้า; (ค) น้ำออกจาก sieve tube ด้วย osmosis'
-  ].join('\n'),
-  q13: [
-    'เฉลย 3: ก(เป็น PCR), ค(มี U → ไม่ใช่ DNA), จ(เริ่ม AUG → ได้ 6 ตัว)'
-  ].join('\n'),
-  q14: [
-    'สรุป: เข้ากับ autosomal; เงื่อนไข X-linked/Y-linked ขัดกับข้อมูล pedigree',
-    '14.3 แต่งงานกับผู้ชายเป็นโรค ลูก “สามารถ” ปกติได้'
-  ].join('\n'),
-  q15: [
-    '15.1 ใช่ (H-W คงที่), 15.2 ไม่ใช่ (เกิด reproductive barrier), 15.3 ไม่ใช่ (ใกล้ bottleneck effect)'
-  ].join('\n')
+  q1: 'เฉลย 5: ข้อ 3/4 ผิด — สิงโตเป็นผู้บริโภคอันดับ 4; กฎ 10% ยังใช้ได้',
+  q2: 'เฉลย 3: BOD = O₂ ที่จุลินทรีย์ใช้ย่อยสารอินทรีย์; ค่ายิ่งต่ำยิ่งดี',
+  q3: 'แปลงคีย์: A→Platyhelminthes, B→Nematoda, C→Chordata, D→Echinodermata, E→Arthropoda, F→Annelida, G→Mollusca',
+  q4: 'เฉลย 5 (ค,ง ถูก): ขั้วมากละลายน้ำดี; competitive inhibitor แย่ง substrate',
+  q5: 'เฉลย 3 (ก,ง ผิด): ไตรกลีเซอไรด์ให้น้ำ 3 โมเลกุล; DNA/RNA ต่างกันที่น้ำตาล/เบส',
+  q6: 'เฉลย 4: A isotonic, B hypertonic; น้ำจืดลง A → เต่ง (พืชไม่แตก)',
+  q7: 'เฉลย 2: โปรตีนโผล่ใน filtrate + Na⁺ สูง ชี้ปัญหา glomerulus/การดูดกลับ',
+  q8: 'เฉลย 5: Thyroid→Calcitonin (ลด Ca²⁺), Parathyroid→PTH (เพิ่ม Ca²⁺)',
+  q9: 'เฉลย 1: Progesterone หลังตกไข่ทำให้เยื่อบุหนา',
+  q10:'เฉลย 5: เคสนี้เป็น reasoning มากกว่า trial & error',
+  q11:'เฉลย 2: ก และ ค ถูก (ก=phloem, ค=fiber รอบนอก ผนังหนา มี lignin)',
+  q12:'เฉลย 2: (ก) active load sucrose → น้ำเข้า; (ค) น้ำออกด้วย osmosis',
+  q13:'เฉลย 3: ก=PCR, ค=มี U, จ=เริ่ม AUG → 6 ตัว',
+  q14:'สรุป autosomal; X/Y-linked ขัดข้อมูล; 14.3 ลูกอาจปกติได้',
+  q15:'15.1 ใช่ (H-W), 15.2 ไม่ (barrier), 15.3 ไม่ (bottleneck-like)'
 };
 
 // ===== Helpers =====
@@ -373,12 +338,12 @@ function collectAllAnswers() {
   return out;
 }
 
-// ===== ส่งข้อมูลไป Google Apps Script (ใส่ URL ของคุณ) =====
+// ===== ส่งข้อมูลไป Google Apps Script (<<< ใส่ URL ของคุณเอง) =====
 async function sendResultToSheet(data) {
-  const GAS_URL = https://script.google.com/macros/s/AKfycbxM2BnUIAPLIaPRHYGGUsXqP4vO54bqpomwhRasBhOrT4ozvxCp3D5d5xXw7IpOSf9hTA/exec; // <<<<<<<<<<<<<< ใส่ URL จาก Apps Script
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxM2BnUIAPLIaPRHYGGUsXqP4vO54bqpomwhRasBhOrT4ozvxCp3D5d5xXw7IpOSf9hTA/exec'; // <<< ต้องเป็น /exec และ deploy ให้ Anyone
   await fetch(GAS_URL, {
     method: 'POST',
-    mode: 'no-cors', // Apps Script จะรับข้อมูลได้ แม้อ่าน response ไม่ได้
+    mode: 'no-cors', // ส่งได้ แม้อ่าน response ไม่ได้
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify(data)
   });
@@ -389,86 +354,91 @@ const submitBtn = document.getElementById('submitBtn');
 const resetBtn  = document.getElementById('resetBtn');
 const resultArea = document.getElementById('resultArea');
 
-submitBtn.addEventListener('click', async ()=>{
-  // 1) เช็คตอบครบ
-  const keys = Object.keys(answers);
-  const unanswered = keys.filter(k => getFormValue(k) == null);
-  if (unanswered.length){
-    const niceList = unanswered.map(prettyKey);
-    resultArea.innerHTML = `
-      <div class="alert">
-        คุณยังตอบไม่ครบ ✋ กรุณาตอบให้ครบก่อนส่ง<br>
-        เว้นไว้: ${niceList.join(', ')}
-      </div>`;
-    scrollToQuestion(unanswered[0]);
-    return;
-  }
-
-  // 2) ตรวจคำตอบ + แสดงผล
-  let correct=0,total=keys.length, output='';
-  for(const key of keys){
-    const val = getFormValue(key);
-    const isCorrect = val === answers[key];
-    if (isCorrect) correct++;
-    const niceKey = prettyKey(key);
-    const cls = isCorrect ? 'correct' : 'incorrect';
-    output += `<div class='${cls}'>
-      ${niceKey}: คุณตอบ ${val} — คำตอบที่ถูกคือ ${answers[key]}
-    </div>`;
-  }
-  const percent = Math.round(correct/total*100);
-
-  resultArea.innerHTML =
-    `<div class='card'>ถูก ${correct} จาก ${total} (${percent}%) 
-      <div style="margin-top:6px;">
-        <button type="button" id="toggleAll" class="ghost" style="padding:6px 10px;border-radius:6px;">แสดง/ซ่อน เฉลยละเอียดทั้งหมด</button>
-      </div>
-    </div>` + output;
-
-  // 3) สร้าง toggle เฉลยละเอียดใต้แต่ละข้อ
-  const questionCards = new Set(keys.map(k => k.replace(/^q/,'').split('_')[0]));
-  questionCards.forEach(qNum => ensureExplainToggle(qNum));
-  showAllExplanations();
-
-  const btn = document.getElementById('toggleAll');
-  if (btn){
-    let shown = true;
-    btn.addEventListener('click',()=>{
-      shown = !shown;
-      document.querySelectorAll('details.explain').forEach(d=>{
-        if (shown) d.classList.add('show'); else d.classList.remove('show');
-      });
-    });
-  }
-
-  // 4) ส่งหลังบ้าน (ต้องติ๊กยินยอมก่อน)
-  const name    = document.getElementById('uName')?.value?.trim()  || '';
-  const email   = document.getElementById('uEmail')?.value?.trim() || '';
-  const consent = document.getElementById('consent')?.checked || false;
-  if (!consent) {
-    resultArea.insertAdjacentHTML('afterbegin',
-      `<div class="alert">โปรดยินยอมให้เก็บข้อมูลก่อนบันทึกไปหลังบ้าน</div>`);
-    return;
-  }
-
-  const payload = {
-    name, email,
-    score: correct, total, percent,
-    quizVersion: 'mini-mock-1',
-    answers: collectAllAnswers(),
-    userAgent: navigator.userAgent,
-    pageUrl: location.href
-  };
+submitBtn.addEventListener('click', async (ev)=>{
+  ev.preventDefault(); ev.stopPropagation();
+  submitBtn.disabled = true;
 
   try {
+    // 1) เช็คตอบครบ
+    const keys = Object.keys(answers);
+    const unanswered = keys.filter(k => getFormValue(k) == null);
+    if (unanswered.length){
+      const niceList = unanswered.map(prettyKey);
+      resultArea.innerHTML = `
+        <div class="alert">
+          คุณยังตอบไม่ครบ ✋ กรุณาตอบให้ครบก่อนส่ง<br>
+          เว้นไว้: ${niceList.join(', ')}
+        </div>`;
+      scrollToQuestion(unanswered[0]);
+      return;
+    }
+
+    // 2) ตรวจคำตอบ + แสดงผล
+    let correct=0,total=keys.length, output='';
+    for(const key of keys){
+      const val = getFormValue(key);
+      const isCorrect = val === answers[key];
+      if (isCorrect) correct++;
+      const niceKey = prettyKey(key);
+      const cls = isCorrect ? 'correct' : 'incorrect';
+      output += `<div class='${cls}'>${niceKey}: คุณตอบ ${val} — คำตอบที่ถูกคือ ${answers[key]}</div>`;
+    }
+    const percent = Math.round(correct/total*100);
+
+    resultArea.innerHTML =
+      `<div class='card'>ถูก ${correct} จาก ${total} (${percent}%) 
+        <div style="margin-top:6px;">
+          <button type="button" id="toggleAll" class="ghost" style="padding:6px 10px;border-radius:6px;">แสดง/ซ่อน เฉลยละเอียดทั้งหมด</button>
+        </div>
+      </div>` + output;
+
+    // 3) สร้าง toggle เฉลยละเอียดใต้แต่ละข้อ
+    const questionCards = new Set(keys.map(k => k.replace(/^q/,'').split('_')[0]));
+    questionCards.forEach(qNum => ensureExplainToggle(qNum));
+    showAllExplanations();
+
+    const btn = document.getElementById('toggleAll');
+    if (btn){
+      let shown = true;
+      btn.addEventListener('click',()=>{
+        shown = !shown;
+        document.querySelectorAll('details.explain').forEach(d=>{
+          if (shown) d.classList.add('show'); else d.classList.remove('show');
+        });
+      });
+    }
+
+    // 4) ส่งหลังบ้าน (ต้องติ๊กยินยอมก่อน)
+    const name    = document.getElementById('uName')?.value?.trim()  || '';
+    const email   = document.getElementById('uEmail')?.value?.trim() || '';
+    const consent = document.getElementById('consent')?.checked || false;
+    if (!consent) {
+      resultArea.insertAdjacentHTML('afterbegin',
+        `<div class="alert">โปรดยินยอมให้เก็บข้อมูลก่อนบันทึกไปหลังบ้าน</div>`);
+      return;
+    }
+
+    const payload = {
+      name, email,
+      score: correct, total, percent,
+      quizVersion: 'mini-mock-1',
+      answers: collectAllAnswers(),
+      userAgent: navigator.userAgent,
+      pageUrl: location.href
+    };
+
     await sendResultToSheet(payload);
     resultArea.insertAdjacentHTML('afterbegin',
       `<div class="card" style="background:#edf2ff;border:1px solid #dbe7ff;margin-bottom:8px">
         บันทึกผลไปยังระบบหลังบ้าน (Google Sheet) เรียบร้อย ✅
       </div>`);
+
   } catch(e){
+    console.error(e);
     resultArea.insertAdjacentHTML('afterbegin',
       `<div class="alert">บันทึกผลไปหลังบ้านไม่สำเร็จ แต่การตรวจคะแนนเสร็จสมบูรณ์แล้ว</div>`);
+  } finally {
+    submitBtn.disabled = false;
   }
 });
 
